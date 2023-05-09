@@ -4,18 +4,20 @@
   $email = $_POST['email'];
   $message = $_POST['message'];
 
-  // Create a new XML file
-  $xml = new SimpleXMLElement('<guestbook></guestbook>');
+  // Create a new Markdown file
+  $markdown = new Markdown();
+  $file = fopen('guestbook.md', 'a');
 
-  // Add a new entry to the XML file
-  $entry = $xml->addChild('entry');
-  $entry->addChild('name', $name);
-  $entry->addChild('email', $email);
-  $entry->addChild('message', $message);
+  // Write the guestbook entry to the Markdown file
+  fwrite($file, $markdown->render([
+    'name' => $name,
+    'email' => $email,
+    'message' => $message,
+  ]));
 
-  // Save the XML file
-  $xml->asXML('guestbook.xml');
+  // Close the Markdown file
+  fclose($file);
 
   // Redirect the user to the guestbook page
-  header('Location: guestbook.html');
+  header('Location: /guestbook');
 ?>
